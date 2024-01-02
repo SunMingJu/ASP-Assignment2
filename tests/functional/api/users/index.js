@@ -110,6 +110,7 @@ describe("Users endpoint", () => {
       });
     });
   });
+
   describe("POST /api/users/:username/favourites", () => {
     describe("when the username is valid", () => {
       describe("when the movie is not in favourites", () => {

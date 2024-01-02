@@ -1,27 +1,80 @@
-import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import usersRouter from './api/users';
+import express from 'express';
+import moviesRouter from './api/movies';
+import peopleRouter from './api/people';
+import reviewsRouter from './api/reviews';
 import './db';
- import './seedData'
-import defaultErrHandler from './errHandler';
-import moviesRouter from './api/movies';   //import movies router
-import authenticate from './authenticate';
+import './seedData'
+import usersRouter from './api/users';
+import session from 'express-session';
+import passport from './authenticate';
+
 
 dotenv.config();
 
+
+const errHandler = (err, req, res, next) => {
+  /* if the error in development then send stack trace to display whole error,
+  if it's in production then just send error message  */
+  if(process.env.NODE_ENV === 'production') {
+    return res.status(500).send(`Something went wrong!`);
+  }
+  res.status(500).send(`Hey!! You caught the error 👍👍. Here's the details: ${err.stack} `);
+};
+
 const app = express();
-const port = process.env.PORT; 
 
-app.use(cors());
+const port = process.env.PORT;
+
+const swaggerJsDoc = require('swagger-jsdoc');
+
+const swaggerUi = require('swagger-ui-express');
 app.use(express.json());
-app.use('/api/users', usersRouter);
-app.use(defaultErrHandler);
-app.use('/api/movies', moviesRouter); //ADD THIS BEFORE THE DEFAULT ERROR HANDLER.
-// app.use('/api/movies',authenticate,  moviesRouter);
 
+app.use(passport.initialize());
+
+// app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+
+app.use('/api/movies', moviesRouter);
+
+
+app.use('/api/people', peopleRouter);
+
+app.use('/api/users', usersRouter);
+
+app.use('/api/reviews', reviewsRouter);
+
+app.use(errHandler);
+
+var path = require('path');
+const swaggerOpt = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Movies API',
+        version: '1.0.0',
+        description: 'A simple Express Movies API, backend for a movie review website application',
+        contact: {
+          name: 'Movies API Support',
+          email: '20104599@mail.wit.ie',
+        },
+        servers: [
+          { 
+            url: 'http://localhost:8080',
+            description: 'Development server',
+          },
+        ],
+    }
+  },
+  apis:['./api/movies/index.js',
+    './api/people/index.js',
+     './api/users/index.js',
+      './api/reviews/index.js']
+};
+const swaggerSpec = swaggerJsDoc(swaggerOpt);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 let server = app.listen(port, () => {
-console.info(`Server running at ${port}`);
+  console.info(`Server running at ${port}`);
 });
 module.exports = server

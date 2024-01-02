@@ -146,8 +146,8 @@ describe("People endpoint", () => {
       it("should return Internal Server Error", () => {
         return request(api)
           .get("/api/people/tmdb/person/1145148")
-            .set("Accept", "application/json")
-            .expect("Content-Type", "text/html; charset=utf-8")
+          .set("Accept", "application/json")
+          .expect("Content-Type", "text/html; charset=utf-8")
           .expect(500)
       });
     });
@@ -184,8 +184,8 @@ describe("People endpoint", () => {
       it("should return Internal Server Error", () => {
         return request(api)
           .get("/api/people/tmdb/person/1145148/images")
-            .set("Accept", "application/json")
-            .expect("Content-Type", "text/html; charset=utf-8")
+          .set("Accept", "application/json")
+          .expect("Content-Type", "text/html; charset=utf-8")
           .expect(500)
       });
     });
@@ -223,8 +223,8 @@ describe("People endpoint", () => {
       it("should return Internal Server Error", () => {
         return request(api)
           .get("/api/people/tmdb/person/1145148/combined_credits")
-            .set("Accept", "application/json")
-            .expect("Content-Type", "text/html; charset=utf-8")
+          .set("Accept", "application/json")
+          .expect("Content-Type", "text/html; charset=utf-8")
           .expect(500)
       });
     });

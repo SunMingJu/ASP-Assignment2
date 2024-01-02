@@ -1,4 +1,3 @@
-// import e from 'express';
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import { getPersonPopular, getPerson, getPersonImages, getPersonCombinedCredit } from '../tmdb-api';
